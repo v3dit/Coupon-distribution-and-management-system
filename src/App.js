@@ -1,23 +1,34 @@
-import logo from './logo.svg';
 import './App.css';
+import {Card, CardImg, CardImgOverlay, CardTitle, CardText } from 'reactstrap';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div>
+        <Card>
+          <CardImg
+            alt="Card image cap"
+            src="https://picsum.photos/900/270?grayscale"
+            style={{
+              height: 270
+            }}
+            width="100%"
+          />
+          <CardImgOverlay>
+            <CardTitle tag="h5">
+              Card Title
+            </CardTitle>
+            <CardText>
+              This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.
+            </CardText>
+            <CardText>
+              <small className="text-muted">
+                Last updated 3 mins ago
+              </small>
+            </CardText>
+          </CardImgOverlay>
+        </Card>
+      </div>
     </div>
   );
 }
