@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Outlet, Link } from "react-router-dom";
+import { Outlet} from "react-router-dom";
 import {
     Navbar,
     NavbarBrand,
@@ -13,15 +13,12 @@ import {
     Nav,
 } from 'reactstrap';
 
-
-
 function Layout(props) {
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const toggle = () => setDropdownOpen(!dropdownOpen);
 
     return (
-
         <>
             <Navbar className="my-2"  >
                 <NavbarBrand href="/">
@@ -36,53 +33,31 @@ function Layout(props) {
                     Ettarra
                 </NavbarBrand>
                 <Nav>
-                    <NavItem>
-                        <NavLink href="#" active>
-                            Link
-                        </NavLink>
-                    </NavItem>
                     <Dropdown nav isOpen={dropdownOpen} toggle={toggle}>
                         <DropdownToggle nav caret>
-                            Dropdown
+                            Login
                         </DropdownToggle>
                         <DropdownMenu>
-                            <DropdownItem header>Header</DropdownItem>
-                            <DropdownItem disabled>Action</DropdownItem>
-                            <DropdownItem>Another Action</DropdownItem>
+                            <DropdownItem><NavLink href="/Customer">Customer</NavLink></DropdownItem>
                             <DropdownItem divider />
-                            <DropdownItem>Another Action</DropdownItem>
+                            <DropdownItem><NavLink href="/Admin">Admin</NavLink></DropdownItem>
+                            <DropdownItem divider />
+                            <DropdownItem><NavLink href="/Cafe">Cafe</NavLink></DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
                     <NavItem>
-                        <NavLink href="#">Link</NavLink>
+                        <NavLink href="#">Website</NavLink>
                     </NavItem>
                     <NavItem>
-                        <NavLink href="#">Another Link</NavLink>
+                        <NavLink href="#">Instagram</NavLink>
                     </NavItem>
                     <NavItem>
                         <NavLink disabled href="#">
-                            Disabled Link
+                            Maps
                         </NavLink>
                     </NavItem>
                 </Nav>
             </Navbar>
-
-            <nav>
-                <ul>
-                    <li>
-                        <Link to="/">Home</Link>
-                    </li>
-                    <li>
-                        <Link to="/Customer">Blogs</Link>
-                    </li>
-                    <li>
-                        <Link to="/Cafe">Contact</Link>
-                    </li>
-                    <li>
-                        <Link to="/Admin">Admin</Link>
-                    </li>
-                </ul>
-            </nav>
 
             <Outlet />
         </>
