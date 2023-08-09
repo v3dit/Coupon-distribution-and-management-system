@@ -1,20 +1,46 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { auth } from '../firebase';
+import { Link, Navigate } from 'react-router-dom';
+import { auth, database } from '../firebase';
 
-const Login = () => {
+const Login = ({ setLoggedInUser }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loginSuccess, setLoginSuccess] = useState(false);
+  const [userRole, setUserRole] = useState(null);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       await auth.signInWithEmailAndPassword(email, password);
-      alert('Logged in');
+      const userId = auth.currentUser.uid;
+
+      // Fetch user data from Real-time Database
+      database.ref(`users/${userId}`).once('value').then((snapshot) => {
+        if (snapshot.exists()) {
+          const userData = snapshot.val();
+          const role = userData.role;
+          setUserRole(role);
+          setLoginSuccess(true);
+          // Pass the userId to the parent component (App.js)
+          setLoggedInUser(userId);
+        }
+      });
     } catch (error) {
       console.log(error.message);
     }
   };
+
+  if (loginSuccess && userRole === 'shop') {
+    return <Navigate to="/shop" />;
+  }
+
+  if (loginSuccess && userRole === 'company') {
+    return <Navigate to="/company" />;
+  }
+
+  if (loginSuccess && userRole === 'customer') {
+    return <Navigate to="/customer" />;
+  }
 
   return (
     <div>

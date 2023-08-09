@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { auth, firestore } from '../firebase';
 import { Navigate } from 'react-router-dom';
+import { auth, database } from '../firebase';
 
 const Register = () => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('');
@@ -14,8 +15,9 @@ const Register = () => {
       // Create user in Firebase authentication
       const { user } = await auth.createUserWithEmailAndPassword(email, password);
 
-      // Create user document in Firestore with role
-      await firestore.collection('users').doc(user.uid).set({
+      // Create user data in Real-time Database with name and role
+      await database.ref(`users/${user.uid}`).set({
+        name: name,
         email: user.email,
         role: role,
       });
@@ -37,6 +39,12 @@ const Register = () => {
       <h2>Register</h2>
       <form onSubmit={handleRegister}>
         <input
+          type="text"
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <input
           type="email"
           placeholder="Email"
           value={email}
@@ -50,7 +58,7 @@ const Register = () => {
         />
         <select value={role} onChange={(e) => setRole(e.target.value)}>
           <option value="">Select Role</option>
-          <option value="admin">Admin</option>
+          <option value="shop">Shop</option>
           <option value="company">Company</option>
           <option value="customer">Customer</option>
         </select>
