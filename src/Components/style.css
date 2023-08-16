@@ -1,0 +1,60 @@
+/* style.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+
+*{
+  font-family: Inter;
+}
+
+input,select {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 2px solid #000;
+  margin: 15px;
+}
+
+
+.topBar {
+  border-bottom: 1px solid #000;
+  margin-bottom: 30px;
+  margin-left: 25px;
+  margin-right: 25px;
+  padding: 15px;
+  font-size: 21px;
+  text-align: right;
+}
+
+
+button {
+  background-color: white;
+  color: black;
+  border: 10 solid black;
+  margin: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 200px;
+}
+
+button:hover {
+  background-color: black;
+  border-color: black;
+  box-shadow: none;
+  color: white;
+}
+
+.visualization-card{
+  background-color: white;
+  color: black;
+  border: 10 solid black;
+  border-radius: 5;
+  margin: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 500px;
+}
+
+.visualization-card:hover {
+  background-color: black;
+  color: white;
+}

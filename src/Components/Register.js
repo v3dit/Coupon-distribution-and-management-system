@@ -44,24 +44,28 @@ const Register = () => {
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
+        <br/>
         <input
           type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
+        <br/>
         <input
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+        <br/>
         <select value={role} onChange={(e) => setRole(e.target.value)}>
           <option value="">Select Role</option>
           <option value="shop">Shop</option>
           <option value="company">Company</option>
           <option value="customer">Customer</option>
         </select>
+        <br/>
         <button type="submit">Register</button>
       </form>
     </div>

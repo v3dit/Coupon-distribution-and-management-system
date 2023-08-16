@@ -1,8 +1,0 @@
-service cloud.firestore {
-  match /databases/{database}/documents {
-    // Allow read and write access to all authenticated users with any role
-    match /{document=**} {
-      allow read, write: if request.auth != null;
-    }
-  }
-}

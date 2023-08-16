@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import { database } from '../firebase';
-import {QrReader,useQrReader} from 'react-qr-reader';
+import { QrReader } from 'react-qr-reader';
 
 const ShopDashboard = () => {
   const [customerId, setCustomerId] = useState('');
   const [couponCode, setCouponCode] = useState('');
   const [couponData, setCouponData] = useState(null);
+  const [qrScanned, setQrScanned] = useState(false);
 
   const handleScan = (data) => {
-    console.log(data);
-    if (data) {
+  console.log("QR Code Data:", data); // Log the data for debugging
+    if (data && !qrScanned) {
+      setQrScanned(true);
+
       const [customerId, companyId, couponId, couponCode] = data.split('_');
-      console.log(customerId);
+
       if (customerId && companyId && couponId && couponCode) {
         // Check if the coupon exists and is valid
         database
@@ -25,13 +28,16 @@ const ShopDashboard = () => {
               setCouponData(couponData);
             } else {
               console.log('Invalid coupon.');
+              setQrScanned(false); // Reset qrScanned state if the coupon is invalid
             }
           })
           .catch((error) => {
             console.log('Error fetching coupon:', error.message);
+            setQrScanned(false); // Reset qrScanned state on error
           });
       } else {
         console.log('Invalid QR code format.');
+        setQrScanned(false); // Reset qrScanned state if the QR code is in an invalid format
       }
     }
   };
@@ -58,9 +64,17 @@ const ShopDashboard = () => {
         accepted_at: new Date().toISOString(),
       });
       setCouponData(null); // Reset coupon data after accepting the order
+      setQrScanned(false); // Reset qrScanned state after order is accepted
     } catch (error) {
       console.log('Error accepting order:', error.message);
     }
+  };
+
+  const rejectOrder = () => {
+    setCustomerId('');
+    setCouponCode('');
+    setCouponData(null);
+    setQrScanned(false); // Reset qrScanned state to restart scanning process
   };
 
   return (
@@ -71,11 +85,22 @@ const ShopDashboard = () => {
           <p>Customer ID: {customerId}</p>
           <p>Coupon Code: {couponCode}</p>
           <button onClick={acceptOrder}>Accept Order</button>
+          <button onClick={rejectOrder}>Reject Order</button>
         </div>
       ) : (
         <div>
-          <QrReader onError={handleError} onResult={handleScan} style={{ width: '0%' }} />
-          <p>Scan the QR code to accept the coupon.</p>
+          {qrScanned ? (
+            <div>
+              <p>QR code successfully scanned. Please accept or reject the order.</p>
+              <button onClick={acceptOrder}>Accept Order</button>
+              <button onClick={rejectOrder}>Reject Order</button>
+            </div>
+          ) : (
+            <div>
+              <QrReader onError={handleError} onResult={handleScan} style={{ width: '100%' }} />
+              <p>Scan the QR code to accept the coupon.</p>
+            </div>
+          )}
         </div>
       )}
     </div>
