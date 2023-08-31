@@ -1,109 +1,81 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { database } from '../firebase';
-import { QrReader } from 'react-qr-reader';
+import { Button, Table, Container} from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-const ShopDashboard = () => {
-  const [customerId, setCustomerId] = useState('');
-  const [couponCode, setCouponCode] = useState('');
-  const [couponData, setCouponData] = useState(null);
-  const [qrScanned, setQrScanned] = useState(false);
+const ShopDashboard = ({ loggedInUser }) => {
+  const [companies, setCompanies] = useState([]);
+  const shopCode = loggedInUser.substring(0, 3) + loggedInUser.slice(-3);
 
-  const handleScan = (data) => {
-  console.log("QR Code Data:", data); // Log the data for debugging
-    if (data && !qrScanned) {
-      setQrScanned(true);
-
-      const [customerId, companyId, couponId, couponCode] = data.split('_');
-
-      if (customerId && companyId && couponId && couponCode) {
-        // Check if the coupon exists and is valid
-        database
-          .ref(`company_coupons/${companyId}/${couponId}`)
-          .once('value')
-          .then((snapshot) => {
-            const couponData = snapshot.val();
-            if (couponData && couponData.coupon_code === couponCode && parseInt(couponData.coupon_count) > 0) {
-              setCustomerId(customerId);
-              setCouponCode(couponCode);
-              setCouponData(couponData);
-            } else {
-              console.log('Invalid coupon.');
-              setQrScanned(false); // Reset qrScanned state if the coupon is invalid
-            }
-          })
-          .catch((error) => {
-            console.log('Error fetching coupon:', error.message);
-            setQrScanned(false); // Reset qrScanned state on error
-          });
+  const fetchCompanies = (shopCodeW) => {
+    database.ref(`shop_companies/${shopCodeW}`).once('value').then((snapshot) => {
+      if (snapshot.exists()) {
+        const companyIds = Object.keys(snapshot.val());
+        const companyPromises = companyIds.map((companyId) => database.ref(`users/${companyId}`).once('value'));
+        Promise.all(companyPromises).then((companiesnapshots) => {
+          const companiesData = companiesnapshots.map((snapshot) => ({
+            company_id: snapshot.key,
+            ...snapshot.val(),
+          }));
+          setCompanies(companiesData);
+        });
       } else {
-        console.log('Invalid QR code format.');
-        setQrScanned(false); // Reset qrScanned state if the QR code is in an invalid format
+        setCompanies([]);
+      }
+    });
+  };
+
+  const handleEditcompany = (companyId) => {
+    console.log(`Editing company with ID ${companyId}`);
+    alert('We are working on this, please Contact Us to make the necessary changes. Thankyou ;)')
+  };
+
+  const handleDeletecompany = async (companyId) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this company?");
+    if (confirmDelete) {
+      console.log(`Deleting company with ID ${companyId}`);
+      try {
+        const deletingRef = database.ref(`shop_companies/${shopCode}`);
+        const deletingSnapshot = await deletingRef.once('value');
+        deletingSnapshot.ref.child(companyId).remove(); // Use .ref.child(companyId).remove() to delete a specific child.
+      }
+      catch (error) {
+        alert(`${error.message}`);
       }
     }
   };
 
-  const handleError = (err) => {
-    console.error(err);
-  };
-
-  const acceptOrder = async () => {
-    try {
-      // Decrease coupon_count by 1 every time a customer uses a coupon
-      await database.ref(`company_coupons/${couponData.company_id}/${couponData.coupon_id}/coupon_count`).transaction((count) => {
-        if (count > 0) {
-          return count - 1;
-        } else {
-          return 0;
-        }
-      });
-
-      // Save order details to the real-time database
-      await database.ref(`orders`).push({
-        customer_id: customerId,
-        coupon_code: couponCode,
-        accepted_at: new Date().toISOString(),
-      });
-      setCouponData(null); // Reset coupon data after accepting the order
-      setQrScanned(false); // Reset qrScanned state after order is accepted
-    } catch (error) {
-      console.log('Error accepting order:', error.message);
-    }
-  };
-
-  const rejectOrder = () => {
-    setCustomerId('');
-    setCouponCode('');
-    setCouponData(null);
-    setQrScanned(false); // Reset qrScanned state to restart scanning process
-  };
+  useEffect(() => {
+    fetchCompanies(shopCode);
+  }, [shopCode]);
 
   return (
-    <div>
-      <h2>Shop Dashboard</h2>
-      {customerId ? (
-        <div>
-          <p>Customer ID: {customerId}</p>
-          <p>Coupon Code: {couponCode}</p>
-          <button onClick={acceptOrder}>Accept Order</button>
-          <button onClick={rejectOrder}>Reject Order</button>
-        </div>
-      ) : (
-        <div>
-          {qrScanned ? (
-            <div>
-              <p>QR code successfully scanned. Please accept or reject the order.</p>
-              <button onClick={acceptOrder}>Accept Order</button>
-              <button onClick={rejectOrder}>Reject Order</button>
-            </div>
-          ) : (
-            <div>
-              <QrReader onError={handleError} onResult={handleScan} style={{ width: '100%' }} />
-              <p>Scan the QR code to accept the coupon.</p>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
+    <Container>
+      <h2 className="mt-4">Shop Dashboard</h2>
+      <h1>{shopCode}</h1>
+      <h3>Companies:</h3>
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {companies.map((company) => (
+            <tr key={company.company_id}>
+              <td>{company.name}</td>
+              <td>{company.email}</td>
+              <td>
+                <Button variant="primary" onClick={() => handleEditcompany(company.company_id)}>Edit</Button>
+                <Button variant="danger" onClick={() => handleDeletecompany(company.company_id)}>Delete</Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </Container>
   );
 };
 

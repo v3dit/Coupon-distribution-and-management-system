@@ -1,34 +1,14 @@
-/* style.css */
-@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Antonio&family=Montserrat:wght@700;800&display=swap');
 
 *{
-  font-family: Inter;
+  font-family: Montserrat;
 }
-
-input,select {
-  margin-bottom: 20px;
-  padding: 10px;
-  border: 2px solid #000;
-  margin: 15px;
-}
-
-
-.topBar {
-  border-bottom: 1px solid #000;
-  margin-bottom: 30px;
-  margin-left: 25px;
-  margin-right: 25px;
-  padding: 15px;
-  font-size: 21px;
-  text-align: right;
-}
-
 
 button {
-  background-color: white;
-  color: black;
-  border: 10 solid black;
-  margin: 10px;
+  font-family: Antonio;
+  background-color: #2B4060;
+  color: #E1ECF4;
+  border: 1px solid #E1ECF4;
   padding: 10px 20px;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -36,25 +16,25 @@ button {
 }
 
 button:hover {
-  background-color: black;
-  border-color: black;
-  box-shadow: none;
-  color: white;
+  background-color: #E1ECF4;
+  border-color: #2B4060;
+  color: #2B4060;
 }
 
-.visualization-card{
-  background-color: white;
-  color: black;
-  border: 10 solid black;
-  border-radius: 5;
-  margin: 10px;
-  padding: 10px 20px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  width: 500px;
+.rotating-image {
+  position: fixed;
+  bottom: -40%;
+  right: -25%;
+  width: 60vw;
+  height: 60vw;
+  animation: rotate 200s linear infinite;
 }
 
-.visualization-card:hover {
-  background-color: black;
-  color: white;
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

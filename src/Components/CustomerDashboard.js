@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { auth, database } from '../firebase';
 import QRCode from 'react-qr-code';
+import { Button, Col, Container, Form, Row, Table } from 'react-bootstrap';
 
 const CustomerDashboard = ({ loggedInUser }) => {
   const [companyEmail, setCompanyEmail] = useState('');
@@ -59,32 +60,67 @@ const CustomerDashboard = ({ loggedInUser }) => {
     }
   };
 
-
   useEffect(() => {
     fetchCoupons(loggedInUser);
   }, [loggedInUser]);
 
   return (
-    <div>
+    <Container>
       <h2>Customer Dashboard</h2>
-      <input type="text" value={companyEmail} onChange={(e) => setCompanyEmail(e.target.value)} />
-      <button onClick={handleRegister}>Register to Company</button>
+      <Form>
+        <Row>
+          <Col md={6}>
+            <Form.Group controlId="companyEmail">
+              <Form.Label>Shop Company Id</Form.Label>
+              <Form.Control
+                type="text"
+                value={companyEmail}
+                placeholder="Shop Company Id"
+                onChange={(e) => setCompanyEmail(e.target.value)}
+              />
+            </Form.Group>
+          </Col>
+          <Col md={6}>
+            <Button variant="primary" onClick={handleRegister}>
+              Register to Company
+            </Button>
+          </Col>
+        </Row>
+      </Form>
       <div>
         <h3>Available Coupons:</h3>
         {coupons.length > 0 ? (
-          coupons.map((coupon) => (
-            <div key={coupon.coupon_id}> {/* Add the unique "key" prop */}
-              <QRCode value={`${loggedInUser}_${coupon.company_id}_${coupon.coupon_id}_${coupon.coupon_code}`} />
-              <p>Coupon Code: {coupon.coupon_code}</p>
-              <p>Discount: {coupon.discount}</p>
-              <p>Validity: {coupon.validity}</p>
-            </div>
-          ))
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>QR Code</th>
+                <th>Coupon Code</th>
+                <th>Discount</th>
+                <th>Validity</th>
+                <th>Count</th>
+              </tr>
+            </thead>
+            <tbody>
+              {coupons.map((coupon) => (
+                <tr key={coupon.coupon_id}>
+                  <td>
+                    <QRCode
+                      value={`https://kupan-34023.web.app/acceptCoupons/${loggedInUser}_${coupon.company_id}_${coupon.coupon_id}_${coupon.coupon_code}`}
+                    />
+                  </td>
+                  <td>{coupon.coupon_code}</td>
+                  <td>{coupon.discount}</td>
+                  <td>{coupon.validity}</td>
+                  <td>{coupon.coupon_count}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
         ) : (
           <p>No coupons available.</p>
         )}
       </div>
-    </div>
+    </Container>
   );
 };
 
