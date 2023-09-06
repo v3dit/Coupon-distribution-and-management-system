@@ -15,7 +15,7 @@ const AcceptCoupons = () => {
     useEffect(() => {
         const urlParams = window.location.pathname.split('/acceptCoupons/')[1];
         if (urlParams) {
-            const [customerId, companyId, couponId, couponCode] = urlParams.split('_');
+            const [customerId, companyId, couponId, couponCode] = urlParams.split('C_C');
             if (customerId && companyId && couponId && couponCode) {
                 // Check if the coupon exists and is valid
                 database

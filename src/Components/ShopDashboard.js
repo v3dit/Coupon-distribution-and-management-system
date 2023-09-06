@@ -51,9 +51,10 @@ const ShopDashboard = ({ loggedInUser }) => {
 
   return (
     <Container>
-      <h2 className="mt-4">Shop Dashboard</h2>
-      <h1>{shopCode}</h1>
-      <h3>Companies:</h3>
+      <h1 className="mt-4">Shop Dashboard</h1>
+      <h3>Shop Code:{shopCode}</h3>
+      <h6>Don't Share this with Anyone</h6>
+      <h2>Registered Companies:</h2>
       <Table striped bordered hover>
         <thead>
           <tr>

@@ -104,7 +104,7 @@ const CompanyDashboard = ({ loggedInUser }) => {
       }
     }
   };
-  
+
 
   useEffect(() => {
     fetchCustomers(companyId);
@@ -146,11 +146,11 @@ const CompanyDashboard = ({ loggedInUser }) => {
 
   return (
     <Container>
-      <h2 className="mt-4">Company Dashboard</h2>
+      <h1 className="mt-4">Company Dashboard</h1>
 
       <Card className="mt-4">
+        <Card.Header><h2>Create Coupon</h2></Card.Header>
         <Card.Body>
-          <h2>Create Coupon</h2>
           <Form>
             <Form.Group controlId="couponCode">
               <Form.Label>Code</Form.Label>
@@ -214,8 +214,8 @@ const CompanyDashboard = ({ loggedInUser }) => {
       </Card>
 
       <Card className="mt-4">
+        <Card.Header><h2>Registered Customers</h2></Card.Header>
         <Card.Body>
-          <h3>Customers:</h3>
           <Table striped bordered hover>
             <thead>
               <tr>
@@ -241,14 +241,14 @@ const CompanyDashboard = ({ loggedInUser }) => {
       </Card>
 
       <Card className="mt-4">
+        <Card.Header><h2>Register to Shop</h2></Card.Header>
         <Card.Body>
-          <h1>Register to Shop</h1>
           <Form>
             <Form.Group controlId="shopEmail">
-              <Form.Label>Shop Email Id</Form.Label>
+              <Form.Label>Enter shop Email Id</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Shop Email Id"
+                placeholder="eg. xyz_shop@gmail.com"
                 value={shopEmail}
                 onChange={(e) => setShopEmail(e.target.value)}
               />

@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { auth, database } from '../firebase';
+import Card from 'react-bootstrap/Card';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import './style.css';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -35,39 +39,54 @@ const Register = () => {
   }
 
   return (
-    <div>
-      <h2>Register</h2>
-      <form onSubmit={handleRegister}>
-        <input
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <br/>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <br/>
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <br/>
-        <select value={role} onChange={(e) => setRole(e.target.value)}>
-          <option value="">Select Role</option>
-          <option value="shop">Shop</option>
-          <option value="company">Company</option>
-          <option value="customer">Customer</option>
-        </select>
-        <br/>
-        <button type="submit">Register</button>
-      </form>
+    <div className="d-flex justify-content-center align-items-center vh-100" style={{backgroundColor:'#2B4060'}}>
+      <Card style={{ minWidth: '40vw', padding:'10px', marginTop:'-10vw' }}>
+        <Card.Body>
+          <h2>Register</h2>
+          <br />
+          <Form onSubmit={handleRegister}>
+            <Form.Group controlId="formName">
+              <Form.Control
+                type="text"
+                placeholder="Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </Form.Group>
+            <br />
+            <Form.Group controlId="formEmail">
+              <Form.Control
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </Form.Group>
+            <br />
+            <Form.Group controlId="formPassword">
+              <Form.Control
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </Form.Group>
+            <br />
+            <Form.Group controlId="formRole">
+              <Form.Control as="select" value={role} onChange={(e) => setRole(e.target.value)}>
+                <option value="">Select Role</option>
+                <option value="shop">Shop</option>
+                <option value="company">Company</option>
+                <option value="customer">Customer</option>
+              </Form.Control>
+            </Form.Group>
+            <br />
+            <Button variant="primary" type="submit">
+              Register
+            </Button>
+          </Form>
+        </Card.Body>
+      </Card>
     </div>
   );
 };

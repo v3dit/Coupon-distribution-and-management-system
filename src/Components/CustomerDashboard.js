@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { auth, database } from '../firebase';
 import QRCode from 'react-qr-code';
-import { Button, Col, Container, Form, Row, Table } from 'react-bootstrap';
+import { Button, Col, Container, Form, Row, Card } from 'react-bootstrap';
+import kupan from './img/kupan.svg';
 
 const CustomerDashboard = ({ loggedInUser }) => {
   const [companyEmail, setCompanyEmail] = useState('');
@@ -50,7 +51,9 @@ const CustomerDashboard = ({ loggedInUser }) => {
 
       if (couponsSnapshot.exists()) {
         const couponsData = couponsSnapshot.val();
-        const couponsArray = Object.values(couponsData);
+        const couponsArray = Object.values(couponsData).filter((coupon) => {
+          return coupon.coupon_count > 0 && new Date(coupon.validity) > new Date();
+        });
         setCoupons(couponsArray);
       } else {
         setCoupons([]);
@@ -66,56 +69,65 @@ const CustomerDashboard = ({ loggedInUser }) => {
 
   return (
     <Container>
-      <h2>Customer Dashboard</h2>
-      <Form>
-        <Row>
-          <Col md={6}>
-            <Form.Group controlId="companyEmail">
-              <Form.Label>Shop Company Id</Form.Label>
-              <Form.Control
-                type="text"
-                value={companyEmail}
-                placeholder="Shop Company Id"
-                onChange={(e) => setCompanyEmail(e.target.value)}
-              />
-            </Form.Group>
-          </Col>
-          <Col md={6}>
-            <Button variant="primary" onClick={handleRegister}>
-              Register to Company
-            </Button>
-          </Col>
-        </Row>
-      </Form>
+      <h1 className="mt-4">Customer Dashboard</h1>
+      <Card className="mt-4">
+        <Card.Header><h2>Register to Shop</h2></Card.Header>
+        <Card.Body>
+          <Form>
+            <Row>
+              <Col md={6}>
+                <Form.Group controlId="companyEmail">
+                  <Form.Label>Enter Company Email Id</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={companyEmail}
+                    placeholder="eg. xyz_company@gmail.com"
+                    onChange={(e) => setCompanyEmail(e.target.value)}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Button variant="primary" onClick={handleRegister}>
+                  Register
+                </Button>
+              </Col>
+            </Row>
+          </Form>
+        </Card.Body>
+      </Card>
       <div>
-        <h3>Available Coupons:</h3>
+        <br />
+        <br />
+        <h2>Available Coupons</h2>
         {coupons.length > 0 ? (
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>QR Code</th>
-                <th>Coupon Code</th>
-                <th>Discount</th>
-                <th>Validity</th>
-                <th>Count</th>
-              </tr>
-            </thead>
-            <tbody>
-              {coupons.map((coupon) => (
-                <tr key={coupon.coupon_id}>
-                  <td>
-                    <QRCode
-                      value={`https://kupan-34023.web.app/acceptCoupons/${loggedInUser}_${coupon.company_id}_${coupon.coupon_id}_${coupon.coupon_code}`}
-                    />
-                  </td>
-                  <td>{coupon.coupon_code}</td>
-                  <td>{coupon.discount}</td>
-                  <td>{coupon.validity}</td>
-                  <td>{coupon.coupon_count}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
+          <div>
+            {coupons.map((coupon) => (
+              <div className="kupan-container">
+                <img src={kupan} alt="kupan" className="svg-image" />
+                <QRCode
+                  value={`https://kupan-34023.web.app/acceptCoupons/${loggedInUser}C_C${coupon.company_id}C_C${coupon.coupon_id}C_C${coupon.coupon_code}`} className="qr-code"
+                />
+                <table className="text-overlay">
+                  <tr>
+                    <th>Coupon Code:&nbsp;</th>
+                    <td>{coupon.coupon_code}</td>
+                  </tr>
+                  <tr>
+                    <th>Discount:</th>
+                    <td>{coupon.discount}</td>
+                  </tr>
+                  <tr>
+                    <th>Validity:</th>
+                    <td>{coupon.validity}</td>
+                  </tr>
+                  <tr>
+                    <th>Count:</th>
+                    <td>{coupon.coupon_count}</td>
+                  </tr>
+                </table>
+              </div>
+            ))}
+          </div>
         ) : (
           <p>No coupons available.</p>
         )}

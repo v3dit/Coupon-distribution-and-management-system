@@ -2,39 +2,82 @@
 
 *{
   font-family: Montserrat;
+  margin: 0px;
+  padding: 0px;
 }
 
-button {
-  font-family: Antonio;
+.StartUpPage{
   background-color: #2B4060;
-  color: #E1ECF4;
-  border: 1px solid #E1ECF4;
-  padding: 10px 20px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  width: 200px;
+  min-height: 100vh;
+  max-width: 100vw;
+  overflow: hidden;
 }
 
-button:hover {
-  background-color: #E1ECF4;
-  border-color: #2B4060;
+.StartUpTitle{
+  color: #EFEFEF;
+  font-size: 29vw;
+}
+
+.StartUpDescription{
+  color: #EFEFEF;
+  font-size: 15px;
+  justify-content: center;
+}
+
+.GetStarted{
+  height: 100%;
+  min-height: 175px;
+  width: 100%;
   color: #2B4060;
+  background-color: #ADD2E4;
+  border: 0px;
+  border-radius: 25px;
+  font-size: 7vw;
 }
 
-.rotating-image {
-  position: fixed;
-  bottom: -40%;
-  right: -25%;
-  width: 60vw;
-  height: 60vw;
-  animation: rotate 200s linear infinite;
+.StartUpPage.hovered {
+  background-color: #E64072;
 }
 
-@keyframes rotate {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+.StartUpTitle.hovered {
+  color: #2B4060;
+  background-color: #E64072;
+}
+
+.StartUpDescription.hovered {
+  color: #2B4060;
+  background-color: #E64072;
+}
+
+.GetStarted:hover {
+  color: #E64072;
+  background-color: #EFEFEF;
+}
+
+.kupan-container {
+  position: relative;
+  margin-top: 25px;
+}
+
+.svg-image {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 650px;
+  height: auto;
+}
+
+.qr-code {
+  position: absolute;
+  top: 5px; 
+  left: 40px;
+  width: 215px;
+}
+
+.text-overlay {
+  font-size: 14px;
+  position: absolute;
+  top: 165px;
+  left: 400px;
+  width: 200px;
 }

@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { auth, database } from '../firebase';
+import { Card, Form, Button } from 'react-bootstrap';
+import './style.css';
+
 
 const Login = ({ setLoggedInUser }) => {
   const [email, setEmail] = useState('');
@@ -43,26 +46,41 @@ const Login = ({ setLoggedInUser }) => {
   }
 
   return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        /><br/>
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        /><br/>
-        <button type="submit">Login</button>
-      </form>
-      <p>
-        Don't have an account? <Link to="/register">Register</Link>
-      </p>
+    <div className="d-flex justify-content-center align-items-center" style={{backgroundColor:'#2B4060', height: '100vh' }}>
+      <Card style={{ minWidth: '40vw', padding:'10px', marginTop:'-10vw' }}>
+        <Card.Body>
+          <h2>Login</h2>
+          <br />
+          <Form onSubmit={handleLogin}>
+            <Form.Group controlId="formBasicEmail">
+              <Form.Control
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </Form.Group>
+            <br />
+            <Form.Group controlId="formBasicPassword">
+              <Form.Control
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </Form.Group>
+            <br />
+
+            <Button variant="primary" type="submit">
+              Login
+            </Button>
+          </Form>
+          <br />
+          <p>
+            Don't have an account? <Link to="/register">Register</Link>
+          </p>
+        </Card.Body>
+      </Card>
     </div>
   );
 };

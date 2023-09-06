@@ -1,20 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import 'react-bootstrap';
 import './style.css';
-import rotatingImg from './img/1.png';
 
 const StartPage = () => {
+  const [hovered, setHovered] = useState(false);
+
+  const handleMouseEnter = () => {
+    setHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setHovered(false);
+  };
+
   return (
-    <div className='container-fluid justify-content-around' style={{ paddingLeft: '7vw', paddingRight: '7vw', position: 'relative' }}>
-      <div className='row justify-content-start mt-5 mb-5 pt-5 pb-5'>
-        <h1 style={{ fontSize: '12.5vh' }}>Kūpan</h1>
-        <p className='col-lg-5 col-md-5 col-sm-5' style={{ fontSize: '2.1vh' }}>Welcome to Jñāna, your ultimate business enhancement platform. We provide comprehensive feedback tools, tailored forms, and immersive visualizations to empower your business with data-driven insights for continuous improvement.</p>
-        <Link to="/login">
-          <button style={{ fontSize: '3vh' }}>Get Started</button>
-        </Link>
+    <div>
+      <div
+        className={`StartUpPage ${hovered ? 'hovered' : ''}`}>
+        <h1 className={`StartUpTitle ${hovered ? 'hovered' : ''}`}>Kūpan</h1>
+        <div className='row justify-content-center align-items-center m-0'>
+          <p className={`StartUpDescription  ${hovered ? 'hovered' : ''} col-lg-4 col-md-4 col-sm-11`}>Discover seamless savings with our all-in-one coupon platform. Connect shops, distributors, and savvy customers through our intuitive system. Distributors effortlessly create and distribute coupons, while shops redeem and benefit. Shoppers unlock exclusive discounts, enhancing their shopping experience. Elevate your savings game with our efficient coupon website.</p>
+          <Link to="/login" className='col-lg-8 col-md-6 col-sm-12'>
+            <button className='GetStarted' onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>Get Started</button>
+          </Link>
+        </div>
       </div>
-      <img className="rotating-image" src={rotatingImg} alt="Rotating" />
     </div>
   );
 };
