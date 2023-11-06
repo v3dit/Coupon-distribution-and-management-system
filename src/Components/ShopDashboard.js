@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { database } from '../firebase';
-import { Button, Table, Container} from 'react-bootstrap';
+import { Button, Table} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Navbar, NavbarText } from 'reactstrap';
+
+import Background from "./img/background.png";
 
 const ShopDashboard = ({ loggedInUser }) => {
   const [companies, setCompanies] = useState([]);
@@ -25,10 +28,28 @@ const ShopDashboard = ({ loggedInUser }) => {
     });
   };
 
-  const handleEditcompany = (companyId) => {
-    console.log(`Editing company with ID ${companyId}`);
-    alert('We are working on this, please Contact Us to make the necessary changes. Thankyou ;)')
+  const handleEditcompany = async (companyId) => {
+    try {
+      const dataSnapshot = await database.ref(`shop_companies/${shopCode}/${companyId}`).once('value');
+      if (dataSnapshot.exists()) {
+        const currentPermission = dataSnapshot.val();
+        if(currentPermission){
+          database.ref(`shop_companies/${shopCode}/${companyId}`).set(false);
+          alert(`Company DISANABLED`);
+        }
+        else{
+          database.ref(`shop_companies/${shopCode}/${companyId}`).set(true);
+          alert('Company ENANABLED');
+        }
+      } else {
+        alert('Company with the specified ID does not exist.');
+      }
+    } catch (error) {
+      alert('Error fetching company data:', error);
+      alert('An error occurred while fetching company data. Please try again later.');
+    }
   };
+  
 
   const handleDeletecompany = async (companyId) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this company?");
@@ -50,11 +71,16 @@ const ShopDashboard = ({ loggedInUser }) => {
   }, [shopCode]);
 
   return (
-    <Container>
-      <h1 className="mt-4">Shop Dashboard</h1>
-      <h3>Shop Code:{shopCode}</h3>
-      <h6>Don't Share this with Anyone</h6>
-      <h2>Registered Companies:</h2>
+    <div className='bg-dark' data-bs-theme="dark" style={{ width: "100%", padding: '10px', minHeight: "100vh", backgroundImage: `url(${Background})`, backgroundPosition: 'center', backgroundSize: 'cover', backgroundRepeat: 'no-repeat' }}>
+      <Navbar className='bg-dark d-flex p-3'>
+        <NavbarText>Shop Dashboard</NavbarText>
+      </Navbar>
+      <br />
+      <h3 style={{ color: 'lightgrey' }}>Shop Code:</h3>
+      <h1 style={{ color: 'black' }}>{shopCode}</h1>
+      <h5 style={{ color: '#bb2124' }}>Don't Share this with Anyone</h5>
+      <br />
+      <h2 style={{ color: 'lightgrey' }}>Registered Companies:</h2>
       <Table striped bordered hover>
         <thead>
           <tr>
@@ -69,14 +95,14 @@ const ShopDashboard = ({ loggedInUser }) => {
               <td>{company.name}</td>
               <td>{company.email}</td>
               <td>
-                <Button variant="primary" onClick={() => handleEditcompany(company.company_id)}>Edit</Button>
+                <Button variant="warning" onClick={() => handleEditcompany(company.company_id)}>Edit</Button>
                 <Button variant="danger" onClick={() => handleDeletecompany(company.company_id)}>Delete</Button>
               </td>
             </tr>
           ))}
         </tbody>
       </Table>
-    </Container>
+    </div>
   );
 };
 

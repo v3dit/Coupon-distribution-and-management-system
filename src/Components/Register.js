@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { auth, database } from '../firebase';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
@@ -12,6 +12,8 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('');
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -30,6 +32,7 @@ const Register = () => {
       console.log('Registration successful');
       setRegistrationSuccess(true);
     } catch (error) {
+      setErrorMessage(error.message);
       console.log(error.message);
     }
   };
@@ -38,9 +41,13 @@ const Register = () => {
     return <Navigate to="/login" />;
   }
 
+  const toggleShowPassword = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
+
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100" style={{backgroundColor:'#2B4060'}}>
-      <Card style={{ minWidth: '40vw', padding:'10px', marginTop:'-10vw' }}>
+    <div className="d-flex justify-content-center align-items-center loginPage pt-5" style={{ height: '100vh' }}>
+      <Card className='bg-dark' data-bs-theme="dark" style={{ minWidth: '40vw', padding: '10px', marginTop: '-10vw' }}>
         <Card.Body>
           <h2>Register</h2>
           <br />
@@ -51,6 +58,7 @@ const Register = () => {
                 placeholder="Name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                required="true"
               />
             </Form.Group>
             <br />
@@ -60,26 +68,41 @@ const Register = () => {
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                required="true"
               />
             </Form.Group>
             <br />
             <Form.Group controlId="formPassword">
               <Form.Control
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required="true"
               />
             </Form.Group>
+            <button
+              className='col-2'
+              onClick={toggleShowPassword}
+              style={{ fontSize: '65%', width: '50px', height: '20px', margin: '5px 5px', background: 'none', color: '#EFEFEF', border: '0px' }}
+            >
+              {showPassword ? 'Hide' : 'Show'}
+            </button>
             <br />
             <Form.Group controlId="formRole">
-              <Form.Control as="select" value={role} onChange={(e) => setRole(e.target.value)}>
+              <Form.Control as="select" value={role} onChange={(e) => setRole(e.target.value)} required="true">
                 <option value="">Select Role</option>
                 <option value="shop">Shop</option>
-                <option value="company">Company</option>
+                <option value="company">Distibutor</option>
                 <option value="customer">Customer</option>
               </Form.Control>
             </Form.Group>
+            <br />
+            <small>
+              Back To <Link to="/login">Login Page</Link> ?
+            </small>
+            {errorMessage ? <p className="text-danger" style={{ maxWidth: '30vw', fontSize: "100%", marginBottom: "-1%", cursor: 'pointer' }}>
+              {errorMessage.split(":")[1]}</p> : ''}
             <br />
             <Button variant="primary" type="submit">
               Register

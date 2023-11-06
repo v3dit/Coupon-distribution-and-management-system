@@ -10,6 +10,8 @@ const Login = ({ setLoggedInUser }) => {
   const [password, setPassword] = useState('');
   const [loginSuccess, setLoginSuccess] = useState(false);
   const [userRole, setUserRole] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -28,7 +30,9 @@ const Login = ({ setLoggedInUser }) => {
           setLoggedInUser(userId);
         }
       });
-    } catch (error) {
+    }
+    catch (error) {
+      setErrorMessage(error.message);
       console.log(error.message);
     }
   };
@@ -45,12 +49,15 @@ const Login = ({ setLoggedInUser }) => {
     return <Navigate to="/customer" />;
   }
 
+  const toggleShowPassword = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
+
   return (
-    <div className="d-flex justify-content-center align-items-center" style={{backgroundColor:'#2B4060', height: '100vh' }}>
-      <Card style={{ minWidth: '40vw', padding:'10px', marginTop:'-10vw' }}>
+    <div className="d-flex justify-content-center align-items-center loginPage" style={{ height: '100vh' }}>
+      <Card className='bg-dark' data-bs-theme="dark" style={{ minWidth: '40vw', padding: '10px', marginTop: '-10vw' }}>
         <Card.Body>
           <h2>Login</h2>
-          <br />
           <Form onSubmit={handleLogin}>
             <Form.Group controlId="formBasicEmail">
               <Form.Control
@@ -63,22 +70,30 @@ const Login = ({ setLoggedInUser }) => {
             <br />
             <Form.Group controlId="formBasicPassword">
               <Form.Control
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </Form.Group>
+            <button
+              className='col-2'
+              onClick={toggleShowPassword}
+              style={{ fontSize: '65%', width: '50px', height: '20px', margin: '5px 5px', background: 'none', color: '#EFEFEF', border: '0px' }}
+            >
+              {showPassword ? 'Hide' : 'Show'}
+            </button>
+            {errorMessage ? <p className="text-danger" style={{ maxWidth: '30vw', fontSize: "100%", marginBottom: "-1%", cursor: 'pointer' }}>
+              {errorMessage.split(":")[1]}</p> : ''}
             <br />
-
             <Button variant="primary" type="submit">
               Login
             </Button>
           </Form>
           <br />
-          <p>
+          <small>
             Don't have an account? <Link to="/register">Register</Link>
-          </p>
+          </small>
         </Card.Body>
       </Card>
     </div>
